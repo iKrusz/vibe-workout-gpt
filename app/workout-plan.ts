@@ -506,6 +506,23 @@ const EXERCISES = {
     workSeconds: [30, 35, 40],
     baseRestSeconds: [30, 25, 20],
   },
+  plankUpDown: {
+    id: "plank-up-down",
+    name: "Przejście z deski niskiej do wysokiej",
+    details: "Zmieniaj podporę z przedramion na dłonie, pilnując stabilnego tułowia i bioder.",
+    focus: "Barki, tricepsy i brzuch",
+    motion: "plank",
+    position: "plank",
+    equipment: "mat",
+    intensity: "high",
+    coaching: [
+      "Nie kołysz biodrami przy zmianie podpory.",
+      "Wciskaj mocno całą dłoń w podłogę.",
+      "Utrzymuj szyję w przedłużeniu kręgosłupa.",
+    ],
+    workSeconds: [30, 35, 40],
+    baseRestSeconds: [30, 25, 20],
+  },
   reverseCrunch: {
     id: "reverse-crunch",
     name: "Reverse crunch",
@@ -523,6 +540,23 @@ const EXERCISES = {
     workSeconds: [35, 40, 45],
     baseRestSeconds: [20, 20, 20],
   },
+  lateralLungeReach: {
+    id: "lateral-lunge-reach",
+    name: "Wykrok boczny z sięgnięciem",
+    details: "Przenoś ciężar w bok do głębszej pracy pośladka i przywodzicieli, sięgając rękami przed siebie.",
+    focus: "Nogi, pośladki i mobilność bioder",
+    motion: "squat",
+    position: "standing",
+    equipment: "bodyweight",
+    intensity: "medium",
+    coaching: [
+      "Biodra prowadź do tyłu, nie tylko w dół.",
+      "Noga wyprostowana pozostaje aktywna.",
+      "Odbijaj się mocno z całej stopy nogi pracującej.",
+    ],
+    workSeconds: [35, 40, 45],
+    baseRestSeconds: [20, 20, 20],
+  },
   skaterStep: {
     id: "skater-step",
     name: "Skater step",
@@ -536,6 +570,23 @@ const EXERCISES = {
       "Ląduj miękko i stabilnie.",
       "Pracuj rękami, by utrzymać rytm.",
       "Nie zapadaj kolana do środka.",
+    ],
+    workSeconds: [35, 40, 45],
+    baseRestSeconds: [20, 20, 20],
+  },
+  gluteBridgeMarch: {
+    id: "glute-bridge-march",
+    name: "Most biodrowy z marszem",
+    details: "Utrzymuj biodra wysoko i naprzemiennie odrywaj stopę, nie tracąc napięcia pośladków.",
+    focus: "Pośladki, tył uda i stabilizacja miednicy",
+    motion: "bridge",
+    position: "floor",
+    equipment: "mat",
+    intensity: "medium",
+    coaching: [
+      "Biodra trzymaj równo, bez przechylania na boki.",
+      "Unosząc stopę, dociśnij mocniej nogę podporową.",
+      "Ruch ma być spokojny i kontrolowany.",
     ],
     workSeconds: [35, 40, 45],
     baseRestSeconds: [20, 20, 20],
@@ -801,25 +852,25 @@ function getTransitionRest(
   const nextGround = next.position === "plank" ? "floor" : next.position;
 
   if (currentGround !== nextGround) {
-    rest += 8;
+    rest += 5;
   }
 
   if (
     (currentGround === "floor" && nextGround === "standing") ||
     (currentGround === "standing" && nextGround === "floor")
   ) {
-    rest += 6;
-  }
-
-  if (current.equipment !== next.equipment) {
-    rest += 6;
-  }
-
-  if (current.intensity === "high") {
     rest += 4;
   }
 
-  return Math.min(rest, 75);
+  if (current.equipment !== next.equipment) {
+    rest += 4;
+  }
+
+  if (current.intensity === "high") {
+    rest += 2;
+  }
+
+  return Math.min(rest, 60);
 }
 
 function createWorkout(
@@ -902,6 +953,8 @@ function createWorkout(
 }
 
 function buildDayA(week: number) {
+  const rotateVariant = week % 2 === 0;
+
   return createWorkout(
     week,
     0,
@@ -931,18 +984,18 @@ function buildDayA(week: number) {
       {
         title: "Blok siłowy",
         note: "Najważniejsza część sesji, skup się na jakości pompek.",
-        rounds: [3, 3, 4],
+        rounds: [4, 4, 4],
         exercises: [
-          { key: week <= 4 ? "inclinePushup" : "tempoPushup" },
+          { key: week <= 4 ? "inclinePushup" : "tempoPushup", workOffset: 5 },
           { key: week <= 8 ? "pikeShoulderTap" : "pikePushupHold" },
-          { key: "tableRow", restOffset: 5 },
-          { key: "forearmPlankReach" },
+          { key: "tableRow", restOffset: 4 },
+          { key: rotateVariant ? "plankUpDown" : "forearmPlankReach" },
         ],
       },
       {
         title: "Blok akcesoryjny",
         note: "Domknij pracę ramion i brzucha bez utraty tempa.",
-        rounds: [3, 3, 3],
+        rounds: [3, 4, 4],
         exercises: [
           { key: "chairDip" },
           { key: "deadBugPress" },
@@ -951,9 +1004,20 @@ function buildDayA(week: number) {
         ],
       },
       {
+        title: "Blok gęstości",
+        note: "Krótsze przerwy, więcej ciągłej pracy i rotacja bodźców dla brzucha oraz barków.",
+        rounds: [2, 2, 3],
+        exercises: [
+          { key: rotateVariant ? "forearmPlankReach" : "plankUpDown" },
+          { key: "reverseCrunch" },
+          { key: "squatToKneeDrive" },
+          { key: "fastFeet" },
+        ],
+      },
+      {
         title: "Finisher",
         note: "Krótki finisz pod spalanie tłuszczu i utrwalenie napięcia korpusu.",
-        rounds: [2, 2, 3],
+        rounds: [2, 3, 3],
         exercises: [
           { key: "squatThrust" },
           { key: "bicycleCrunch" },
@@ -975,6 +1039,8 @@ function buildDayA(week: number) {
 }
 
 function buildDayB(week: number) {
+  const rotateVariant = week % 2 === 0;
+
   return createWorkout(
     week,
     1,
@@ -1004,18 +1070,19 @@ function buildDayB(week: number) {
       {
         title: "Blok nogi i plecy",
         note: "Najpierw wzorce siłowe, potem stabilizacja.",
-        rounds: [3, 3, 4],
+        rounds: [4, 4, 4],
         exercises: [
           { key: "splitSquat" },
           { key: "singleLegBridge" },
-          { key: "tableRow", restOffset: 5 },
+          { key: "tableRow", restOffset: 4 },
           { key: "sidePlankHipLift" },
+          { key: rotateVariant ? "lateralLungeReach" : "squatToKneeDrive" },
         ],
       },
       {
         title: "Blok kondycyjny",
         note: "Gęsta praca na uda, barki i brzuch.",
-        rounds: [3, 3, 3],
+        rounds: [3, 3, 4],
         exercises: [
           { key: "squatPulse" },
           { key: "bearPlankTap" },
@@ -1024,9 +1091,20 @@ function buildDayB(week: number) {
         ],
       },
       {
+        title: "Blok stabilizacji",
+        note: "Dodatkowa objętość na pośladki i korpus bez rozwlekania sesji.",
+        rounds: [2, 2, 2],
+        exercises: [
+          { key: rotateVariant ? "gluteBridgeMarch" : "gluteBridgeHold" },
+          { key: "lateralLungeReach" },
+          { key: "sidePlankHipLift" },
+          { key: "fastFeet" },
+        ],
+      },
+      {
         title: "Finisher",
         note: "Kontrolowany wysiłek całego ciała bez skoków wymagających dużo miejsca.",
-        rounds: [2, 3, 3],
+        rounds: [2, 2, 3],
         exercises: [
           { key: "burpeeStepBack" },
           { key: "mountainClimber" },
@@ -1048,6 +1126,8 @@ function buildDayB(week: number) {
 }
 
 function buildDayC(week: number) {
+  const rotateVariant = week % 2 === 0;
+
   return createWorkout(
     week,
     2,
@@ -1077,18 +1157,19 @@ function buildDayC(week: number) {
       {
         title: "Blok górnej części ciała",
         note: "Pracuj blisko upadku technicznego, ale bez tracenia ustawienia tułowia.",
-        rounds: [3, 4, 4],
+        rounds: [4, 4, 4],
         exercises: [
           { key: "closeGripPushup" },
           { key: "widePushup" },
-          { key: "tableRow", restOffset: 5 },
+          { key: "tableRow", restOffset: 4 },
           { key: "sidePlankReach" },
+          { key: rotateVariant ? "plankUpDown" : "forearmPlankReach" },
         ],
       },
       {
         title: "Blok brzuch i ramiona",
         note: "Dużo napięcia lokalnego i krótsze przejścia między ćwiczeniami.",
-        rounds: [3, 3, 3],
+        rounds: [3, 3, 4],
         exercises: [
           { key: "chairDip" },
           { key: "crossClimber" },
@@ -1097,9 +1178,20 @@ function buildDayC(week: number) {
         ],
       },
       {
+        title: "Blok gęstości",
+        note: "Dodatkowy obwód na definicję: barki, brzuch i tempo pracy bez długich przestojów.",
+        rounds: [2, 2, 2],
+        exercises: [
+          { key: rotateVariant ? "deadBugPress" : "reverseCrunch" },
+          { key: "plankUpDown" },
+          { key: "stepJack" },
+          { key: "bicycleCrunch" },
+        ],
+      },
+      {
         title: "Finisher",
         note: "Krótki finisz metaboliczny przed wyhamowaniem.",
-        rounds: [2, 3, 3],
+        rounds: [2, 2, 3],
         exercises: [
           { key: "squatThrust" },
           { key: "bearPlankTap" },

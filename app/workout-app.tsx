@@ -2294,7 +2294,7 @@ export default function WorkoutApp() {
                 <div className="inline-flex rounded-full border border-black/10 bg-white/70 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-(--muted) shadow-[0_8px_22px_rgba(20,18,13,0.06)]">
                   Dzień: {currentTrainingDay}
                 </div>
-                <h1 className="mt-5  text-[2.7rem] font-semibold leading-[0.9] tracking-[-0.06em] text-(--ink)">
+                <h1 className="mt-5 text-center text-[2.7rem] font-semibold leading-[0.9] tracking-[-0.06em] text-(--ink)">
                   Domowy plan na mocniejszą sylwetkę.
                 </h1>
               </div>
